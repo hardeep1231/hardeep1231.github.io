@@ -1,0 +1,107 @@
+<?php
+include("config.php");
+include("firebaseRDB.php");
+
+$db = new firebaseRDB($databaseURL);
+$id = $_GET['id'];
+$retrieve = $db->retrieve("film/$id");
+$data = json_decode($retrieve, true);
+
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+   <title>Editing Collection</title>
+   <link rel="stylesheet" href="style.css">
+   <style>
+      body {
+         font-family: Arial, sans-serif;
+         background-color: #f2f2f2;
+         margin: 0;
+         padding: 0;
+      }
+
+      .container {
+         max-width: 500px;
+         margin: 20px auto;
+         padding: 20px;
+         background-color: #ffffff;
+         border-radius: 4px;
+         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      h2 {
+         margin-top: 0;
+         margin-bottom: 20px;
+      }
+
+      table {
+         width: 100%;
+         border-collapse: collapse;
+      }
+
+      table td {
+         padding: 8px;
+      }
+
+      input[type="text"] {
+         width: 100%;
+         padding: 8px;
+         border: 1px solid #ccc;
+         border-radius: 4px;
+         box-sizing: border-box;
+      }
+
+      input[type="submit"] {
+         display: block;
+         width: 100%;
+         padding: 8px;
+         background-color: #FF5722;
+         color: #fff;
+         border: none;
+         border-radius: 4px;
+         cursor: pointer;
+      }
+
+      input[type="submit"]:hover {
+         background-color: #E64A19;
+      }
+   </style>
+</head>
+<body>
+   <div class="container">
+      <h2>Editing Collection</h2>
+      <form method="post" action="action_edit.php">
+         <table border="0">
+            <tr>
+               <td>Title</td>
+               <td>:</td>
+               <td><input type="text" name="title" value="<?php echo $data['title']?>"></td>
+            </tr>
+            <tr>
+               <td>Thumbnail</td>
+               <td>:</td>
+               <td><input type="text" name="thumbnail" value="<?php echo $data['thumbnail']?>"></td>
+            </tr>
+            <tr>
+               <td>Year</td>
+               <td>:</td>
+               <td><input type="text" name="year" value="<?php echo $data['year']?>"></td>
+            </tr>
+            <tr>
+               <td>Rating</td>
+               <td>:</td>
+               <td><input type="text" name="rating" value="<?php echo $data['rating']?>"></td>
+            </tr>
+            <tr>
+               <td colspan="3">
+                  <input type="hidden" name="id" value="<?php echo $id?>">
+                  <input type="submit" value="SAVE">
+               </td>
+            </tr>
+         </table>
+      </form>
+   </div>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<?php
+include("config.php");
+include("firebaseRDB.php");
+
+$db = new firebaseRDB($databaseURL);
+$id = $_GET['id'];
+if($id != ""){
+   if (isset($_GET['confirm']) && $_GET['confirm'] == 'true') {
+      $delete = $db->delete("film", $id);
+      echo "<script>window.location.href = 'dashboard.html';</script>";
+      exit;
+   }
+}
+
+$data = $db->retrieve("film/$id");
+$data = json_decode($data, true);
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+   <title>Delete Film</title>
+   <link rel="stylesheet" href="style.css">
+   <style>
+      body {
+         font-family: Arial, sans-serif;
+         background-color: #f2f2f2;
+         margin: 0;
+         padding: 0;
+      }
+
+      .container {
+         max-width: 800px;
+         margin: 0 auto;
+         padding: 20px;
+         text-align: center;
+      }
+
+      h2 {
+         margin-top: 0;
+      }
+
+      .confirm-message {
+         margin-bottom: 20px;
+      }
+
+      .button {
+         display: inline-block;
+         padding: 8px 12px;
+         text-decoration: none;
+         background-color: #FF5722;
+         color: white;
+         border-radius: 4px;
+         font-size: 14px;
+      }
+
+      .button:hover {
+         background-color: #E64A19;
+      }
+   </style>
+</head>
+<body>
+   <div class="container">
+      <h2>Delete Film</h2>
+      <p class="confirm-message">Are you sure you want to delete this film?</p>
+      <a href="?id=<?php echo $id; ?>&confirm=true" class="button">Delete</a>
+      <a href="dashboard.php" class="button">Cancel</a>
+   </div>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<?php
+include("config.php");
+include("firebaseRDB.php");
+
+$db = new firebaseRDB($databaseURL);
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+   <title>Film Collection</title>
+   <link rel="stylesheet" href="style.css">
+   <style>
+      body {
+         font-family: Arial, sans-serif;
+         background-color: #f2f2f2;
+         margin: 0;
+         padding: 0;
+      }
+
+      .header {
+         background-color: #333;
+         color: #fff;
+         padding: 20px;
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+      }
+
+      .header-left {
+         flex-grow: 1;
+      }
+
+      .header-right {
+         margin-left: 20px;
+      }
+
+      h1 {
+         margin: 0;
+         font-size: 24px;
+         font-weight: bold;
+      }
+
+      .container {
+         max-width: 800px;
+         margin: 0 auto;
+         padding: 20px;
+      }
+
+      table {
+         width: 100%;
+         border-collapse: collapse;
+         margin-top: 20px;
+      }
+
+      th, td {
+         padding: 10px;
+         text-align: left;
+      }
+
+      th {
+         background-color: #dddddd;
+         color: #333;
+      }
+
+      img {
+         width: 100px;
+         height: auto;
+      }
+
+      a.button {
+         display: inline-block;
+         padding: 8px 12px;
+         text-decoration: none;
+         background-color: #FF5722; /* Updated button color */
+         color: white;
+         border-radius: 4px;
+         font-size: 14px;
+      }
+
+      a.button:hover {
+         background-color: #E64A19; /* Updated button hover color */
+      }
+
+      .heading {
+         font-size: 28px;
+         font-weight: bold;
+         margin-bottom: 20px;
+      }
+
+      .welcome-message {
+         font-size: 18px;
+         color: #777;
+      }
+   </style><script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Retrieve the userId from localStorage
+    var userId = localStorage.getItem('user');
+
+    // Update the span element with the userId value
+    var userIdSpan = document.getElementById('userIdSpan');
+    userIdSpan.textContent = userId;
+  });
+</script>
+</head>
+<body>
+   <div class="header">
+      <div class="header-left">
+         <h1>Film Collection</h1>
+      </div>
+      <div class="header-right">
+         <a href="add.php" class="button">ADD FILM</a>
+         <a href="index.html" class="button">Logout</a>
+      </div>
+   </div>
+
+   <div class="container">
+      <h2 class="heading">Your Collection</h2>
+      <p class="welcome-message">Welcome to your film collection! Browse and manage your films below: <span id="userIdSpan"></span></p>
+      <table border="1">
+         <tr>
+            <th>Thumbnail</th>
+            <th>Title</th>
+            <th>Year</th>
+            <th>Rating</th>
+            <th colspan="2">Action</th>
+         </tr>
+         <?php
+         $data = $db->retrieve("film");
+         $data = json_decode($data, true);
+
+         if (is_array($data)) {
+            foreach ($data as $id => $film) {
+               echo "<tr>
+               <td><img src='{$film['thumbnail']}'></td>
+               <td>{$film['title']}</td>
+               <td>{$film['year']}</td>
+               <td>{$film['rating']}</td>
+               <td><a href='edit.php?id=$id' class='button'>EDIT</a></td>
+               <td><a href='delete.php?id=$id' class='button'>DELETE</a></td>
+            </tr>";
+            }
+         }
+         ?>
+      </table>
+   </div>
+</body>
+</html>
